@@ -3,87 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brawl Stars Pro Hub - Guías y Meta</title>
+    <title>Brawl Stars - FUTURE HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        'cyber': ['Orbitron', 'sans-serif'],
+                        'main': ['Rajdhani', 'sans-serif'],
+                    },
                     colors: {
-                        'bs-dark': '#0f172a',
-                        'bs-accent': '#fbbf24',
-                        'bs-card': '#1e293b',
+                        'neon-blue': '#00f3ff',
+                        'neon-purple': '#bc13fe',
+                        'cyber-black': '#050505',
+                        'cyber-gray': '#121212',
                     }
                 }
             }
         }
     </script>
+    <style>
+        body { background-color: #050505; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        .neon-border { border: 1px solid #00f3ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.4); }
+        .glass { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
+        .modal { transition: all 0.3s ease; }
+        .hidden-modal { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(0.9); }
+        .card-glow:hover { box-shadow: 0 0 25px rgba(0, 243, 255, 0.6); transform: translateY(-5px); }
+    </style>
 </head>
-<body class="bg-bs-dark text-gray-100 font-sans">
+<body class="text-white">
 
-    <nav class="bg-slate-900 p-4 border-b-2 border-bs-accent sticky top-0 z-50">
+    <nav class="border-b border-neon-blue bg-black/90 sticky top-0 z-50 p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-black text-bs-accent tracking-tighter uppercase">Brawl <span class="text-white">Pro Hub</span></a>
-            <div class="hidden md:flex space-x-6">
-                <a href="#" class="hover:text-bs-accent transition font-bold">GUÍAS</a>
-                <a href="#" class="hover:text-bs-accent transition font-bold">TIER LIST</a>
-                <a href="#" class="hover:text-bs-accent transition font-bold">NOTICIAS</a>
+            <a href="#" class="font-cyber text-2xl text-neon-blue tracking-tighter">BRAWL_HUB <span class="text-white text-sm">v2.0</span></a>
+            <div class="hidden md:flex space-x-8 font-cyber text-xs">
+                <a href="#" class="hover:text-neon-blue transition">DATA_CENTER</a>
+                <a href="#" class="hover:text-neon-blue transition">ADS_NETWORK</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-6 text-center">
-        <div class="bg-slate-800 p-4 inline-block text-[10px] text-gray-500 border border-slate-700 rounded w-full max-w-[728px]">
-            ESPACIO PARA PUBLICIDAD (ADSENSE)
+    <header class="py-20 text-center relative">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neon-blue/10 via-transparent to-transparent"></div>
+        <h1 class="font-cyber text-6xl md:text-8xl font-black italic tracking-tighter mb-4 text-white">FUTURE <span class="text-neon-blue">META</span></h1>
+        <p class="text-gray-400 font-cyber text-xs tracking-[0.5em] uppercase">Protocolo de Combate eSports Activado</p>
+    </header>
+
+    <div class="container mx-auto mb-10 text-center">
+        <div class="border border-gray-800 bg-cyber-gray p-4 inline-block w-full max-w-[728px] text-[10px] text-gray-600 font-cyber">
+            [ ESPACIO_PUBLICIDAD_ADSENSE ]
         </div>
     </div>
 
-    <header class="py-16 px-4 text-center">
-        <h1 class="text-5xl md:text-7xl font-black text-white mb-4 italic tracking-tighter">¡DOMINA EL META!</h1>
-        <p class="text-xl text-slate-400 max-w-2xl mx-auto">Las mejores estrategias y secretos de Brawl Stars para subir copas como un pro.</p>
-        <div class="mt-8">
-            <button class="bg-bs-accent text-black font-black px-10 py-4 rounded-full hover:scale-105 transition-transform uppercase italic">Empezar a ganar</button>
-        </div>
-    </header>
+    <main class="container mx-auto px-4 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            
+            <div onclick="openModal('modal1')" class="neon-border bg-cyber-gray cursor-pointer transition-all card-glow group">
+                <div class="h-40 bg-black flex items-center justify-center border-b border-neon-blue/30 group-hover:bg-neon-blue/5">
+                    <span class="font-cyber text-neon-blue text-xl uppercase tracking-widest">Brawlers</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-cyber text-lg mb-2 text-white">REPORTE DE NIVEL S</h3>
+                    <p class="text-gray-500 text-sm uppercase">Click para desencriptar info...</p>
+                </div>
+            </div>
 
-    <main class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-bs-card rounded-2xl overflow-hidden border border-slate-700 hover:border-bs-accent transition">
-                <div class="h-48 bg-slate-700 flex items-center justify-center text-bs-accent font-bold italic text-2xl">IMAGEN BRAWLER</div>
+            <div onclick="openModal('modal2')" class="neon-border bg-cyber-gray cursor-pointer transition-all card-glow group">
+                <div class="h-40 bg-black flex items-center justify-center border-b border-neon-blue/30 group-hover:bg-neon-blue/5">
+                    <span class="font-cyber text-neon-blue text-xl uppercase tracking-widest">Trucos</span>
+                </div>
                 <div class="p-6">
-                    <span class="text-xs font-bold bg-amber-500 text-black px-2 py-1 rounded">GUÍA TOP</span>
-                    <h3 class="text-2xl font-extrabold mt-3">Mejores Brawlers para Supervivencia</h3>
-                    <p class="mt-2 text-slate-400">Descubre quiénes mandan en el mapa este mes.</p>
+                    <h3 class="font-cyber text-lg mb-2 text-white">HACKS DE COMBATE</h3>
+                    <p class="text-gray-500 text-sm uppercase">Acceder a la base de datos...</p>
                 </div>
             </div>
-            <div class="bg-bs-card rounded-2xl overflow-hidden border border-slate-700 hover:border-bs-accent transition">
-                <div class="h-48 bg-slate-700 flex items-center justify-center text-bs-accent font-bold italic text-2xl">IMAGEN BRAWLER</div>
+
+            <div onclick="openModal('modal3')" class="neon-border bg-cyber-gray cursor-pointer transition-all card-glow group border-white/20">
+                <div class="h-40 bg-black flex items-center justify-center border-b border-white/10 group-hover:bg-white/5">
+                    <span class="font-cyber text-gray-500 text-xl uppercase tracking-widest italic">Ads</span>
+                </div>
                 <div class="p-6">
-                    <span class="text-xs font-bold bg-amber-500 text-black px-2 py-1 rounded">TIER LIST</span>
-                    <h3 class="text-2xl font-extrabold mt-3">Tier List Actualizada Parche 2026</h3>
-                    <p class="mt-2 text-slate-400">Analizamos todos los cambios de balance de ayer.</p>
+                    <h3 class="font-cyber text-lg mb-2 text-gray-500">PUBLICIDAD</h3>
+                    <p class="text-gray-600 text-sm uppercase">Soporta el servidor...</p>
                 </div>
             </div>
-            <div class="bg-bs-card rounded-2xl overflow-hidden border border-slate-700 hover:border-bs-accent transition">
-                <div class="h-48 bg-slate-700 flex items-center justify-center text-bs-accent font-bold italic text-2xl">IMAGEN BRAWLER</div>
-                <div class="p-6">
-                    <span class="text-xs font-bold bg-amber-500 text-black px-2 py-1 rounded">TRUCOS</span>
-                    <h3 class="text-2xl font-extrabold mt-3">Cómo conseguir gemas gratis</h3>
-                    <p class="mt-2 text-slate-400">Métodos legales para maximizar tu cuenta.</p>
-                </div>
-            </div>
+
         </div>
     </main>
 
-    <div class="container mx-auto mb-12 text-center">
-        <div class="bg-slate-800 p-6 inline-block text-[10px] text-gray-500 border border-slate-700 rounded w-full max-w-[300px]">
-            ANUNCIO ADSENSE
+    <div id="modal1" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 glass">
+        <div class="neon-border bg-black p-8 max-w-2xl w-full relative">
+            <button onclick="closeModal('modal1')" class="absolute top-4 right-4 text-neon-blue font-cyber hover:text-white">[X] CERRAR</button>
+            <h2 class="font-cyber text-3xl text-neon-blue mb-6 border-b border-neon-blue/30 pb-2">TOP BRAWLERS 2026</h2>
+            <div class="space-y-4 text-gray-300 font-main text-lg">
+                <p><strong class="text-white text-xl">1. Shelly (Hyper):</strong> Con su nueva velocidad de carga es imparable en mapas cerrados.</p>
+                <p><strong class="text-white text-xl">2. Mortis:</strong> Si sabes hacer el combo de dash, ahora recupera vida más rápido por impacto.</p>
+                <p><strong class="text-white text-xl">3. Leon:</strong> Sigue siendo el rey del sigilo en Supervivencia Solo.</p>
+            </div>
         </div>
     </div>
 
-    <footer class="bg-slate-950 py-8 border-t border-slate-800 text-center text-slate-500 text-sm">
-        <p>© 2026 Brawl Pro Hub - Hecho para Brawlers</p>
+    <div id="modal2" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 glass">
+        <div class="neon-border bg-black p-8 max-w-2xl w-full relative border-neon-purple shadow-[0_0_20px_#bc13fe]">
+            <button onclick="closeModal('modal2')" class="absolute top-4 right-4 text-neon-purple font-cyber hover:text-white">[X] CERRAR</button>
+            <h2 class="font-cyber text-3xl text-neon-purple mb-6 border-b border-neon-purple/30 pb-2 text-shadow-none">PROTOCOLO DE VICTORIA</h2>
+            <div class="space-y-4 text-gray-300 font-main text-lg">
+                <p><strong class="text-white italic">TÉCNICA A:</strong> Apunta manualmente siempre. El auto-aim es para principiantes.</p>
+                <p><strong class="text-white italic">TÉCNICA B:</strong> Controla el centro del mapa en Atrapagemas. Quien domina el centro, domina la partida.</p>
+                <p><strong class="text-white italic">TÉCNICA C:</strong> No gastes tus gadgets en los primeros 10 segundos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal3" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 glass">
+        <div class="neon-border bg-black p-8 max-w-lg w-full relative border-white/20">
+            <button onclick="closeModal('modal3')" class="absolute top-4 right-4 text-gray-500 font-cyber hover:text-white">[X] CERRAR</button>
+            <h2 class="font-cyber text-xl text-gray-500 mb-6 uppercase">Espacio Publicitario</h2>
+            <div class="bg-gray-900 h-64 flex items-center justify-center text-gray-700 font-cyber text-xs">
+                Aquí irá el bloque de anuncio de AdSense
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-20 py-10 border-t border-gray-900 text-center">
+        <p class="font-cyber text-[10px] text-gray-600 tracking-[0.5em]">SYSTEM_OVERRIDE // BRAWL_STARS_FAN_PAGE</p>
     </footer>
 
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden-modal');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden-modal');
+            document.body.style.overflow = 'auto';
+        }
+        // Cerrar al hacer clic fuera del cuadro
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.add('hidden-modal');
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
 </body>
 </html>
