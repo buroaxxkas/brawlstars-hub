@@ -1,117 +1,597 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRAWL_HACK // PROTOCOLO 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { background-color: #020202; font-family: 'Fira Code', monospace; overflow-x: hidden; }
-        .neon-text { color: #39ff14; text-shadow: 0 0 10px #39ff14; }
-        .neon-border { border: 1px solid #39ff14; box-shadow: 0 0 15px rgba(57, 255, 20, 0.2); }
-        .scanline {
-            width: 100%; height: 2px; background: rgba(57, 255, 20, 0.1);
-            position: absolute; animation: scan 4s linear infinite;
-        }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        .modal { transition: all 0.2s ease-in-out; }
-        .hidden-modal { opacity: 0; visibility: hidden; transform: scale(1.1); }
-        .card:hover { background: #0a0a0a; border-color: #fff; transform: translateY(-2px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAWL_STARS // PROTOCOLO_OMEGA_v9.1.3</title>
+<style>
+/* -----------------------------------------------------------
+   SECCIÓN 1: ESTILOS NÚCLEO (CSS MAESTRO)
+   ----------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&family=Orbitron:wght@400;900&display=swap');
+
+:root {
+  --glitch-green: #00ff41;
+  --cyber-blue: #00f3ff;
+  --matrix-bg: #010203;
+  --terminal-font: 'Fira Code', monospace;
+  --header-font: 'Orbitron', sans-serif;
+  --scanline-color: rgba(0, 255, 65, 0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+body {
+  background-color: var(--matrix-bg);
+  color: var(--glitch-green);
+  font-family: var(--terminal-font);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+/* EFECTOS DE PANTALLA CRT VIEJA */
+body::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 1000;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+#scanline {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--scanline-color);
+  z-index: 1001;
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline { 0% { top: -4px; } 100% { top: 100%; } }
+
+/* -----------------------------------------------------------
+   SECCIÓN 2: INTERFAZ DE USUARIO (UI/UX)
+   ----------------------------------------------------------- */
+
+/* CABECERA SISTEMA */
+header {
+  border-bottom: 2px solid var(--glitch-green);
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+}
+
+.logo {
+  font-family: var(--header-font);
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 0 10px var(--glitch-green);
+}
+
+.system-status {
+  font-size: 0.8rem;
+  display: flex;
+  gap: 15px;
+}
+
+.status-node {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.led {
+  width: 8px; height: 8px; border-radius: 50%;
+  background-color: var(--glitch-green);
+  box-shadow: 0 0 10px var(--glitch-green);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ZONA ADSENSE SUPERIOR */
+.adsense-top {
+  border: 1px dashed var(--glitch-green);
+  margin: 20px auto;
+  padding: 10px;
+  width: 728px;
+  height: 90px;
+  text-align: center;
+  font-size: 10px;
+  color: rgba(0, 255, 65, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ÁREA PRINCIPAL DE DATOS */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: relative;
+}
+
+/* EL MOTOR DE LLUVIA MATRIX */
+#matrix-canvas {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1;
+  opacity: 0.2;
+}
+
+/* SECCIÓN DE HYPE */
+.hype-console {
+  text-align: center;
+  margin-bottom: 40px;
+  z-index: 2;
+  position: relative;
+}
+
+.hype-title {
+  font-family: var(--header-font);
+  font-size: 4rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  transform: skewX(-10deg);
+  text-shadow: 2px 2px 0 var(--glitch-green), -2px -2px 0 var(--cyber-blue);
+  margin-bottom: 10px;
+}
+
+.hype-subtitle {
+  color: var(--cyber-blue);
+  font-size: 1rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+
+/* REJILLA DE DATOS (TARJETAS) */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  z-index: 2;
+  position: relative;
+}
+
+.data-node {
+  border: 2px solid var(--glitch-green);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.data-node::before {
+  content: "";
+  position: absolute;
+  top: -100%; left: -100%; width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 45%, rgba(0, 255, 65, 0.1) 50%, transparent 55%);
+  transition: all 0.5s ease;
+}
+
+.data-node:hover::before {
+  top: 0; left: 0;
+}
+
+.data-node:hover {
+  border-color: #fff;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.node-header {
+  font-size: 0.7rem;
+  color: rgba(0, 255, 65, 0.5);
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+  padding-bottom: 5px;
+}
+
+.node-title {
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  tracking: -1px;
+}
+
+.node-desc {
+  font-size: 0.9rem;
+  color: var(--glitch-green);
+}
+
+/* -----------------------------------------------------------
+   SECCIÓN 3: VENTANAS TÁCTICAS (MODALES)
+   ----------------------------------------------------------- */
+.tactical-display {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 2, 3, 0.95);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(10px);
+}
+
+.tactical-display.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tactical-window {
+  border: 3px solid #fff;
+  background: #000;
+  width: 100%;
+  max-width: 1000px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 0 50px rgba(0, 243, 255, 0.5);
+  transform: scale(0.9) translateY(50px);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.tactical-display.active .tactical-window {
+  transform: scale(1) translateY(0);
+}
+
+.window-header {
+  border-bottom: 2px solid #fff;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  color: #000;
+  font-family: var(--header-font);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.close-btn {
+  background: none; border: 2px solid #000;
+  color: #000; font-family: var(--terminal-font);
+  padding: 5px 15px; cursor: pointer;
+  font-weight: 700; transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #000; color: #fff;
+}
+
+.window-body {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  font-size: 1rem;
+  color: #fff;
+  line-height: 1.6;
+}
+
+/* ESTILOS DE DATOS REALES */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  text-align: left;
+}
+
+.data-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+  color: var(--cyber-blue);
+}
+
+.tier-s { color: #ff0000; font-weight: 700; }
+.tier-a { color: #ff8800; }
+
+/* -----------------------------------------------------------
+   SECCIÓN 4: CÓDIGO MAESTRO DE JAVASCRIPT
+   ----------------------------------------------------------- */
+</style>
 </head>
-<body class="text-green-500">
+<body>
 
-    <div class="scanline"></div>
+<div id="scanline"></div>
 
-    <header class="p-6 border-b border-green-900 bg-black sticky top-0 z-50 flex justify-between items-center">
-        <div class="neon-text font-bold tracking-tighter">
-            > BRAWL_SYS_v4.0.1
-        </div>
-        <div class="text-[10px] animate-pulse">
-            SISTEMA: EN LÍNEA // ADS_READY: TRUE
-        </div>
-    </header>
+<header>
+  <div class="logo">> BRAWL_STARS // PROTOCOLO_OMEGA</div>
+  <div class="system-status">
+    <div class="status-node"><div class="led"></div> RED: ACTIVA</div>
+    <div class="status-node">ADS_READY: TRUE</div>
+    <div class="status-node">TÁCTICA: v9.1.3</div>
+  </div>
+</header>
 
-    <section class="py-20 px-6 text-center relative">
-        <h1 class="text-4xl md:text-6xl font-bold uppercase mb-4 tracking-widest text-white">
-            Hackea el <span class="neon-text">Meta</span>
-        </h1>
-        <p class="text-green-800 text-sm max-w-xl mx-auto">Acceso denegado a jugadores mediocres. Descifrando puntos débiles del servidor de Supercell...</p>
-    </section>
+<div class="adsense-top">
+  [ RESERVADO PARA GOOGLE_ADS_01 // ANUNCIO HORIZONTAL ]
+  <div style="font-size: 8px; color: rgba(0, 255, 65, 0.1);">Cargando scripts de monetización...</div>
+</div>
 
-    <div class="container mx-auto mb-10 text-center">
-        <div class="border border-green-900 p-2 inline-block w-full max-w-[728px] bg-black">
-            <p class="text-[9px] text-green-900 mb-1">RESERVADO PARA GOOGLE_ADS_01</p>
-            <div class="h-[90px] flex items-center justify-center border border-dashed border-green-900 text-xs italic">
-                Cargando Publicidad...
-            </div>
-        </div>
+<main>
+  <canvas id="matrix-canvas"></canvas>
+  
+  <section class="hype-console">
+    <h1 class="hype-title">Domina el Caos</h1>
+    <p class="hype-subtitle">Análisis Táctico de Élite de Brawl Stars</p>
+  </section>
+
+  <div class="data-grid">
+    
+    <div class="data-node" onclick="showTacticalDisplay('meta')">
+      <div class="node-header">[01] PROTOCOLO_META // DESCIFRANDO</div>
+      <h3 class="node-title">Tier List S+</h3>
+      <p class="node-desc">Análisis de Brawlers con mayor ratio de victoria en el parche actual.</p>
     </div>
 
-    <main class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <div onclick="openModal('m1')" class="card neon-border p-6 cursor-pointer transition-all">
-            <div class="text-[10px] mb-4 text-green-800">[01] ANALIZANDO_BRAWLERS</div>
-            <h3 class="text-xl font-bold text-white mb-2">TIER_LIST S+</h3>
-            <p class="text-sm text-green-700">Los Brawlers rotos que te harán subir 1000 copas hoy.</p>
-        </div>
-
-        <div onclick="openModal('m2')" class="card neon-border p-6 cursor-pointer transition-all">
-            <div class="text-[10px] mb-4 text-green-800">[02] INYECTANDO_SKILL</div>
-            <h3 class="text-xl font-bold text-white mb-2">SCRIPTS DE MOVIMIENTO</h3>
-            <p class="text-sm text-green-700">Cómo esquivar como un bot de nivel experto.</p>
-        </div>
-
-        <div onclick="openModal('m3')" class="card neon-border p-6 cursor-pointer transition-all border-green-900 opacity-70">
-            <div class="text-[10px] mb-4 text-green-800">[03] FARMEO_CRÉDITOS</div>
-            <h3 class="text-xl font-bold text-white mb-2">MAXIMIZAR CUENTA</h3>
-            <p class="text-sm text-green-700">Ruta óptima de premios para F2P (Free to Play).</p>
-        </div>
-
-    </main>
-
-    <div id="m1" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90">
-        <div class="neon-border bg-black p-8 max-w-2xl w-full">
-            <h2 class="text-2xl font-bold neon-text mb-6 uppercase tracking-widest">Descifrando: El Meta Actual</h2>
-            <div class="space-y-4 text-sm">
-                <p><span class="text-white font-bold">> CLANCY:</span> Sigue siendo el rey del daño. Si llegas a nivel 3 de oro, la partida ha terminado.</p>
-                <p><span class="text-white font-bold">> MOE:</span> Su movilidad en espacios cerrados está rompiendo el modo Balón Brawl.</p>
-                <p><span class="text-white font-bold">> KENJI:</span> La capacidad de curación por golpe lo hace inmortal contra Brawlers de poco daño.</p>
-            </div>
-            <button onclick="closeModal('m1')" class="mt-8 text-xs border border-green-500 px-4 py-2 hover:bg-green-500 hover:text-black transition uppercase italic">Cerrar Sesión</button>
-        </div>
+    <div class="data-node" onclick="showTacticalDisplay('tactics')">
+      <div class="node-header">[02] HACKS_DE_COMBATE // INYECTANDO</div>
+      <h3 class="node-title">Tácticas Pro</h3>
+      <p class="node-desc">Estrategias avanzadas de movimiento y control de mapa para 3c3.</p>
     </div>
 
-    <div id="m2" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90">
-        <div class="neon-border bg-black p-8 max-w-2xl w-full border-white/50">
-            <h2 class="text-2xl font-bold text-white mb-6 uppercase">Base de Datos: Skill Inyectada</h2>
-            <div class="space-y-4 text-sm text-gray-400">
-                <p>> <b class="text-green-500">LANE CONTROL:</b> Nunca te juntes con tus aliados. Si los tres vais por el medio, un brawler con daño de área os borrará.</p>
-                <p>> <b class="text-green-500">BAITING:</b> Acércate al arbusto y retrocede rápido. Obliga al enemigo a gastar el gadget de detección antes de tiempo.</p>
-                <p>> <b class="text-green-500">SUPER MANAGEMENT:</b> No uses la súper si tienes 100 de vida. Guárdala para cuando respawnees.</p>
-            </div>
-            <button onclick="closeModal('m2')" class="mt-8 text-xs border border-white px-4 py-2 hover:bg-white hover:text-black transition uppercase">Cerrar_Fichero</button>
-        </div>
+    <div class="data-node" onclick="showTacticalDisplay('economy')">
+      <div class="node-header">[03] FARMEO_ECONÓMICO // OPTIMIZANDO</div>
+      <h3 class="node-title">Ruta de Premios</h3>
+      <p class="node-desc">Cómo maximizar el progreso F2P y conseguir Brawlers más rápido.</p>
     </div>
 
-    <div id="m3" class="modal hidden-modal fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90">
-        <div class="neon-border bg-black p-8 max-w-lg w-full">
-            <h2 class="text-xl font-bold text-green-900 mb-6 uppercase">Buffer de Publicidad</h2>
-            <div class="h-40 border border-green-900 flex items-center justify-center text-[10px] italic text-green-900">
-                [ ESPACIO PARA CÓDIGO GOOGLE ADSENSE ]
-            </div>
-            <button onclick="closeModal('m3')" class="mt-6 text-[10px] text-green-900 underline uppercase">Volver</button>
-        </div>
+  </div>
+</main>
+
+<div id="display-meta" class="tactical-display">
+  <div class="tactical-window">
+    <div class="window-header">
+      <div>> REPORTE_DE_INTELIGENCIA // TIER_LIST</div>
+      <button class="close-btn" onclick="hideTacticalDisplay()">[X] CERRAR</button>
     </div>
+    <div class="window-body">
+      <h2>Análisis de Dominio de Parche</h2>
+      <p>Basado en los últimos datos de servidores eSports.</p>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Brawler</th>
+            <th>Nivel</th>
+            <th>Rol</th>
+            <th>Modo Óptimo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clancy</td>
+            <td class="tier-s">S+ (Roto)</td>
+            <td>Daño (Carry)</td>
+            <td>Atraco / Zona Caliente</td>
+          </tr>
+          <tr>
+            <td>Moe</td>
+            <td class="tier-s">S+ (Roto)</td>
+            <td>Asesino</td>
+            <td>Balón Brawl / Supervivencia</td>
+          </tr>
+          <tr>
+            <td>Kenji</td>
+            <td class="tier-a">A+ (Fuerte)</td>
+            <td>Luchador</td>
+            <td>Atrapagemas / Noqueo</td>
+          </tr>
+          <tr>
+            <td>Larry y Lawrie</td>
+            <td class="tier-a">A+ (Fuerte)</td>
+            <td>Control</td>
+            <td>Atraco / Balón Brawl</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-    <footer class="mt-20 py-10 border-t border-green-900 text-center text-[9px] text-green-900 tracking-[1em] uppercase">
-        Conexión Segura // 2026 eSports Hub
-    </footer>
+<div id="display-tactics" class="tactical-display">
+  <div class="tactical-window" style="border-color: var(--cyber-blue); box-shadow: 0 0 50px rgba(0, 243, 255, 0.5);">
+    <div class="window-header" style="background: var(--cyber-blue); color: #000;">
+      <div>> PROTOCOLO_DE_SKILL // INYECCIÓN</div>
+      <button class="close-btn" onclick="hideTacticalDisplay()">[X] CERRAR</button>
+    </div>
+    <div class="window-body">
+      <h2>Códigos de Movimiento y Combate</h2>
+      <p>Aplica estas reglas para superar el 90% de la base de jugadores.</p>
+      
+      <div style="margin-top: 20px; space-y: 15px;">
+        <p><b style="color: var(--cyber-blue);">[REGLA_01] Stutter Step Manual:</b> Nunca uses auto-aim a larga distancia. Aprende a moverte perpendicularmente al disparo enemigo entre tus propios ataques.</p>
+        <p><b style="color: var(--cyber-blue);">[REGLA_02] Control de Carriles (Lanes):</b> En 3c3, divide el mapa en Izquierda, Centro y Derecha. No te amontones con tus compañeros; un brawler con daño de área os borrará.</p>
+        <p><b style="color: var(--cyber-blue);">[REGLA_03] Gestión de Súper:</b> No gastes tu Súper en una batalla que ya has perdido. Guárdala para forzar una kill o asegurar un objetivo.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        function openModal(id) { document.getElementById(id).classList.remove('hidden-modal'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden-modal'); }
-    </script>
+<div id="display-economy" class="tactical-display">
+  <div class="tactical-window" style="border-color: #ff8800; box-shadow: 0 0 50px rgba(255, 136, 0, 0.5);">
+    <div class="window-header" style="background: #ff8800; color: #000;">
+      <div>> FARMEo_DE_DATOS // ECONOMÍA</div>
+      <button class="close-btn" onclick="hideTacticalDisplay()">[X] CERRAR</button>
+    </div>
+    <div class="window-body">
+      <h2>Ruta Óptima F2P (Free to Play)</h2>
+      <p>Maximiza tus créditos y oro sin gastar dinero real.</p>
+      
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Prioridad</th>
+            <th>Acción</th>
+            <th>Recompensa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Misiones Diarias y del Brawl Pass</td>
+            <td>Fichas y Premios Starr</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Subir todos los brawlers a Rango 10-15-20</td>
+            <td>Puntos de Fuerza, Monedas y Blines</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Participar en Eventos de Fin de Semana</td>
+            <td>Fichas Extra</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+/* -----------------------------------------------------------
+   SECCIÓN 5: MOTOR DE JAVASCRIPT AVANZADO
+   ----------------------------------------------------------- */
+
+// 1. EL MOTOR MATRIX (Lluvia de Código)
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Caracteres katakana y alfanuméricos
+const matrixChars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビウゥクスツヌフムユュルグズブヅデェケセテネヘメレヱゲゼデベォコソトノホモヨョロヲゴゾドボヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const chars = matrixChars.split("");
+
+const fontSize = 16;
+const columns = canvas.width / fontSize; // Número de columnas para la lluvia
+
+// Un array de gotas, una por columna
+const drops = [];
+for (let x = 0; x < columns; x++) {
+  drops[x] = 1;
+}
+
+// Dibujando los caracteres
+function drawMatrix() {
+  // Fondo negro semitransparente para el efecto de estela
+  ctx.fillStyle = "rgba(1, 2, 3, 0.04)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#00ff41"; // Color de la fuente Matrix
+  ctx.font = fontSize + "px 'Fira Code'";
+
+  // Recorriendo las gotas
+  for (let i = 0; i < drops.length; i++) {
+    // Un carácter aleatorio para dibujar
+    const text = chars[Math.floor(Math.random() * chars.length)];
+    // x = i * fontSize, y = valor de la gota * fontSize
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    // Enviando la gota de vuelta a la parte superior aleatoriamente después de que haya cruzado la pantalla
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
+
+    // Incrementando la coordenada Y
+    drops[i]++;
+  }
+}
+
+// Iniciando el motor Matrix a 30 FPS
+setInterval(drawMatrix, 33);
+
+// Redimensionar el canvas si cambia el tamaño de la ventana
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+// 2. SISTEMA DE VENTANAS TÁCTICAS (MODALES)
+
+function showTacticalDisplay(type) {
+  // Primero, ocultamos todas las ventanas activas
+  hideTacticalDisplay();
+
+  // Obtenemos la ventana específica
+  const display = document.getElementById('display-' + type);
+  if (display) {
+    display.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Bloquea el scroll del fondo
+  }
+}
+
+function hideTacticalDisplay() {
+  const displays = document.querySelectorAll('.tactical-display');
+  displays.forEach(display => {
+    display.classList.remove('active');
+  });
+  document.body.style.overflow = ''; // Reactiva el scroll
+}
+
+// Cerrar ventana si se hace clic fuera del cuadro blanco
+window.onclick = function(event) {
+  if (event.target.classList.contains('tactical-display')) {
+    hideTacticalDisplay();
+  }
+}
+
+// Cerrar con la tecla Escape
+window.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    hideTacticalDisplay();
+  }
+});
+
+// 3. EFECTO DE ESCRITURA DINÁMICA DE TEXTO
+// (Añade una línea de carga de terminal al inicio)
+const hypeConsole = document.querySelector('.hype-console');
+const loadingText = document.createElement('p');
+loadingText.style.color = 'white';
+loadingText.style.fontSize = '0.8rem';
+loadingText.style.marginTop = '10px';
+loadingText.textContent = '> Cargando módulos de inteligencia...';
+hypeConsole.appendChild(loadingText);
+
+let dots = 0;
+setInterval(() => {
+  dots = (dots + 1) % 4;
+  loadingText.textContent = '> Cargando módulos de inteligencia' + '.'.repeat(dots);
+  if (Math.random() > 0.9) {
+    loadingText.style.color = Math.random() > 0.5 ? 'var(--cyber-blue)' : 'white';
+  }
+}, 300);
+
+</script>
 </body>
 </html>
